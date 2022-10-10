@@ -78,8 +78,7 @@ const starterPrompt = [
 const viewAllEmployees = async () => {
   db.query("SELECT * FROM employees;", (err, res) => {
     if (err) throw err;
-    const ve = console.table(res);
-    console.log(ve);
+    console.table(res);
   })
   init();
 }
@@ -87,8 +86,7 @@ const viewAllEmployees = async () => {
 const viewAllRoles = async () => {
   db.query("SELECT * FROM roles;", (err, res) => {
     if (err) throw err;
-    const vr = console.table(res);
-    console.log(vr);
+    console.table(res);
   })
   init();
 }
@@ -96,8 +94,7 @@ const viewAllRoles = async () => {
 const viewAllDepartments = async () => {
   db.query("SELECT * FROM departments;", (err, res) => {
     if (err) throw err;
-    const vd = console.table(res);
-    console.log(vd);
+    console.table(res);
   })
   init();
 }
@@ -136,19 +133,20 @@ const addEmployee = () => {
 }
 
 const addDepartment = () => {
-  const deptQ = [
+  inquirer
+  .prompt([
     {
       type: "input",
       message: 'What is the name of the department you would like to create?',
       name: 'department_name'
     }
-  ];
-    inquirer.prompt(deptQ).then(answer);
+  ]).then((answer) => {
     db.query(`INSERT INTO departments('department_name') VALUES('${answer.department_name}');`, (err, res) => {
       (err) ? console.error(err) : console.log('Department added successfully.');
       console.table(res);
-    });
-  };
+  })
+  })
+};
 
 
 const addRole = async () => {
