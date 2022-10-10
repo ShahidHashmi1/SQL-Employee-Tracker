@@ -2,20 +2,18 @@ const mysql = require("mysql2");
 const cTable = require("console.table");
 const inquirer = require("inquirer");
 const logo = require("asciiart-logo");
+const db = require('./db/connection');
+
 
 // const viewTables = [];
 // ^^^^ possibly push all responses to this array above
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  database: "company_db",
-  password: "",
-});
+
 db.connect((err) => {
   err ? console.error(err) : console.log("Successfully started server.");
   starterPrompt();
 });
+
 
 const starterPrompt = () => {
     const logoText = logo({ name: "Employee Manager" }).render();
@@ -39,8 +37,8 @@ const starterPrompt = () => {
       },
     ])
     .then((response) => {
-      const firstAnswer = response.choices;
-      switch (firstAnswer) {
+      const firstResponse = response.choices;
+      switch (firstResponse) {
         case "View all employees":
           viewAllEmployees();
           break;
@@ -79,29 +77,33 @@ const starterPrompt = () => {
 const viewAllEmployees = async () => {
   db.query("SELECT * FROM employees;", (err, res) => {
     if (err) throw err;
-    console.table(res);
+    const ve = console.table(res);
+    console.log(ve);
   })
-  await starterPrompt();
+  starterPrompt();
 };
 
-const viewAllRoles = () => {
+const viewAllRoles = (answers) => {
   db.query("SELECT * FROM roles;", (err, res) => {
     if (err) throw err;
-    console.table(res);
-    // starterPrompt();
-  });
+    const vr = console.table(res);
+    console.log(vr);
+  })
+  starterPrompt();
 };
 
-const viewAllDepartments = () => {
+const viewAllDepartments = (answers) => {
   db.query("SELECT * FROM departments;", (err, res) => {
     if (err) throw err;
-    console.table(res);
-    starterPrompt();
+    const vd = console.table(res);
+    console.log(vd);
   });
+  starterPrompt();
 };
 
 const addEmployee = () => {
-  inquirer.prompt([
+  inquirer
+    .prompt([
       {
         type: "input",
         message: "Enter the employee's first name.",
@@ -128,11 +130,11 @@ const addEmployee = () => {
         (err) ? console.error(err) : console.log('Employee successfully added.') ;
         console.table(res);
       });
-      starterPrompt();
     });
+    // starterPrompt();
 };
 
-const addDepartment = () => {
+const addDepartment = async () => {
   inquirer
     .prompt([
       {
@@ -140,11 +142,14 @@ const addDepartment = () => {
         message: 'What is the name of the department you would like to create?',
         name: 'department_name'
       }
-    ]).then(response);
-    db.query(`INSERT into departments VALUES ('${response.department_name}');`, (err, res) => {
+    ])
+    .then(answer);
+    db.query(`INSERT INTO departments VALUES('${answer.department_name}');`, (err, res) => {
       (err) ? console.error(err) : console.log('Department added successfully.');
-    })
-}
+      console.table(res);
+    });
+  };
+
 
 const addRole = async () => {
   inquirer
@@ -173,14 +178,19 @@ const addRole = async () => {
 }
 
 const updateEmployeeRole = async () => {
-  inquirer.prompt([
-    {
-      type: "input",
-      message: "update employee role",
-      name: "updateEmployeeRole",
-    },
-  ]);
-  await db.query("UPDATE employees WHERE role_id IS _;");
+  db.query('INSERT INTO roles SET ?', 
+  {
+
+  })
+
+  // inquirer.prompt([
+  //   {
+  //     type: "input",
+  //     message: "update employee role",
+  //     name: "updateEmployeeRole",
+  //   },
+  // ]);
+  // await db.query("UPDATE employees WHERE role_id IS _;");
   // figure out how to update employee role with mysql command
   starterPrompt();
 };
