@@ -1,4 +1,2 @@
-SELECT departments.department_name, employees.role_id
-FROM departments 
-JOIN roles ON departments.id = roles.department_id
-JOIN employees ON roles.id = employees.role_id;
+SELECT id AS EmpNo, first_name as First, last_name AS Last, role_id AS Role, manager_id AS Manager FROM employees
+JOIN roles ON roles.id = employees.role_id;

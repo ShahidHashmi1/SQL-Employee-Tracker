@@ -14,6 +14,14 @@ db.connect((err) => {
   init();
 });
 
+// const viewJoin = async () => {
+//   db.query('Select * FROM employees JOIN roles ON employee.role_id = roles.id;', (err, res) => {
+//     (err) ? console.error(err) : console.log('Employee successfully added.') ;
+//     console.table(res);
+//   })
+//   init();
+// }
+
 const init = () => {
   const logoText = logo({ name: "Employee Manager" }).render();
   console.log(logoText);
@@ -49,6 +57,10 @@ const init = () => {
         addDepartment();
         break;
 
+      // case "View Employee Table":
+      //   viewJoin();
+      //   break;
+
       case "Quit":
         quit();
         break;
@@ -70,6 +82,7 @@ const starterPrompt = [
     "Add role",
     "View all departments",
     "Add department",
+    "View Employee Table",
     "Quit"
   ]
 }
