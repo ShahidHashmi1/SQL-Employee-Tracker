@@ -5,7 +5,7 @@ const logo = require("asciiart-logo");
 const db = require('./db/connection');
 
 
-// const viewTables = [];
+const allRoles = [];
 // ^^^^ possibly push all responses to this array above
 
 
@@ -176,6 +176,7 @@ const addRole = () => {
       db.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${response.role_title}', ${response.salary}, ${response.department_id});`, (err, res) => {
         (err) ? console.error(err) : console.log('Role added successfully.');
         console.table(res);
+        // allRoles.push(res);
       })
       init();
     })
