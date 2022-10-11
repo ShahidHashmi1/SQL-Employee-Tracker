@@ -75,6 +75,7 @@ const starterPrompt = [
 }
 ];
 
+// works
 const viewAllEmployees = async () => {
   db.query("SELECT * FROM employees;", (err, res) => {
     if (err) throw err;
@@ -83,6 +84,7 @@ const viewAllEmployees = async () => {
   init();
 }
 
+// works
 const viewAllRoles = async () => {
   db.query("SELECT * FROM roles;", (err, res) => {
     if (err) throw err;
@@ -91,16 +93,19 @@ const viewAllRoles = async () => {
   init();
 }
 
-const viewAllDepartments = async () => {
+// works
+const viewAllDepartments = async (departments) => {
   db.query("SELECT * FROM departments;", (err, res) => {
     if (err) throw err;
     console.table(res);
   })
-  init();
+  init(departments);
 }
 
+// works
 const addEmployee = () => {
-  const questions = [
+  inquirer
+  .prompt([
     {
       type: "input",
       message: "Enter the employee's first name.",
@@ -121,17 +126,16 @@ const addEmployee = () => {
       message: "Enter the manager ID number.",
       name: "manager_id",
     }
-  ];
-
-    inquirer.prompt(questions).then((answers) => {
-      db.query(`INSERT INTO employees('first_name', 'last_name', role_id, manager_id) VALUES ('${answers.first_name}', '${answers.last_name}', ${answers.role_id}, ${answers.manager_id});`, (err, res) => {
+  ]).then((answers) => {
+      db.query(`INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES ('${answers.first_name}', '${answers.last_name}', ${answers.role_id}, ${answers.manager_id});`, (err, res) => {
         (err) ? console.error(err) : console.log('Employee successfully added.') ;
         console.table(res);
       });
+      init();
     })
-    init();
 }
 
+// works
 const addDepartment = () => {
   inquirer
   .prompt([
@@ -141,15 +145,16 @@ const addDepartment = () => {
       name: 'department_name'
     }
   ]).then((answer) => {
-    db.query(`INSERT INTO departments('department_name') VALUES('${answer.department_name}');`, (err, res) => {
+    db.query(`INSERT INTO departments(department_name) VALUES('${answer.department_name}');`, (err, res) => {
       (err) ? console.error(err) : console.log('Department added successfully.');
       console.table(res);
   })
-  })
+  init();
+})
 };
 
-
-const addRole = async () => {
+// works
+const addRole = () => {
   inquirer
     .prompt([
       {
@@ -167,30 +172,36 @@ const addRole = async () => {
         message: "What is this role's department ID?",
         name: "department_id"
       }
-    ]).then(response);
-    db.query(`INSERT INTO roles ('title', 'salary', department_id) VALUES ('${response.role_title}', ${response.salary}, ${response.department_id});`, (err, res) => {
-      (err) ? console.error(err) : console.log('Role added successfully.');
-      console.table(res);
+    ]).then((response) => {
+      db.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${response.role_title}', ${response.salary}, ${response.department_id});`, (err, res) => {
+        (err) ? console.error(err) : console.log('Role added successfully.');
+        console.table(res);
+      })
+      init();
     })
-    await inquirer.prompt(starterPrompt);
 }
 
+// works??
 const updateEmployeeRole = async () => {
-  db.query('INSERT INTO roles SET ?', 
-  {
-
+  inquirer
+  .prompt([
+    {
+      name: "role_id", 
+      message: "What is the updated role id?",
+      type: "input"
+    },
+    {
+      name: "id",
+      message: "What is the current employee's id number?",
+      type: "input"
+    }
+  ]).then((response) => {
+    db.query(`UPDATE employees SET role_id = ${response.role_id} WHERE id = ${response.id}`, (err, res) => {
+    (err) ? console.error(err) : console.log('Employee role updated successfully.');
+    console.table(res);
+})
+init();
   })
-
-  // inquirer.prompt([
-  //   {
-  //     type: "input",
-  //     message: "update employee role",
-  //     name: "updateEmployeeRole",
-  //   },
-  // ]);
-  // await db.query("UPDATE employees WHERE role_id IS _;");
-  // figure out how to update employee role with mysql command
-
 };
 
 

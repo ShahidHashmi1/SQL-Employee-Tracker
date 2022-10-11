@@ -18,12 +18,12 @@ VALUES ("Salesperson", '65000', 1),
        ("Marketing Team Member", '65000', 5);
 
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
-VALUES ("Nick", "Mason", 1, 1),
-       ("Bob", "Ross", 1, 2),
-       ("John", "Smith", 2, 1),
-       ("Chris", "Tucker", 3,  3),
-       ("Samantha", "Jackson", 4, 4),
-       ("Sarah", "Parker", 5, 2),
-       ("Jane", "Doe", 6, 2),
-       ("Kim", "Smith", 7, 1),
-       ("Lauren", "Thomas", 8, 5);
+VALUES ("Shahid", "Hashmi", 1, 1),
+       ("Nick", "Mason", 1, 2),
+       ("Dimitra", "Anastasopoulos", 2, 1),
+       ("Corey", "Skidmore", 3,  3),
+       ("Eric", "Weiss", 4, 4),
+       ("Mike", "Kotte", 5, 2),
+       ("Mark", "Cubban", 6, 2),
+       ("Dale", "Hawerchuck", 7, 1),
+       ("Pavel", "Datsyuk", 8, 5);
