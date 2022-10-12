@@ -15,7 +15,6 @@ const init = () => {
   menuNav();
 };
 
-
 const starterPrompt = [
   {
   type: "list",
@@ -80,6 +79,7 @@ const viewAllEmployees = async () => {
     console.log('\n');
     console.table(res);
   })
+  console.log('\n');
   await menuNav();
 }
 
@@ -89,6 +89,7 @@ const viewAllRoles = async () => {
     console.log('\n');
     console.table(res);
   })
+  console.log('\n');
   await menuNav();
 }
 
@@ -98,6 +99,7 @@ const viewAllDepartments = async (departments) => {
     console.log('\n');
     console.table(res);
   })
+  console.log('\n');
   await menuNav(departments);
 }
 
@@ -130,6 +132,7 @@ const addEmployee = () => {
         console.log('\n');
         console.table(res);
       });
+    console.log('\n');
     })
     .then(menuNav());
 }
@@ -148,6 +151,7 @@ const addDepartment = () => {
       console.log('\n');
       console.table(res);
   })
+  console.log('\n');
 })
 .then(menuNav());
 };
@@ -176,6 +180,7 @@ const addRole = () => {
         console.log('\n');
         console.table(res);
       })
+    console.log('\n');
     })
     .then(menuNav());
 }
@@ -199,6 +204,7 @@ const updateEmployeeRole = async () => {
     console.log('\n');
     console.table(res);
 })
+console.log('\n');
 })
 .then(menuNav());
 };
