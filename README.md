@@ -31,6 +31,7 @@ SO THAT I can organize and plan my business
 ```
 
   ## Acceptance-Criteria
+  
 ```
 GIVEN a command-line application that accepts user input
 WHEN I start the application

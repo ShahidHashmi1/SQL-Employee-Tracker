@@ -1,30 +1,40 @@
 const mysql = require("mysql2");
-const cTable = require("console.table");
+const consoleTable = require("console.table");
 const inquirer = require("inquirer");
 const logo = require("asciiart-logo");
 const db = require('./db/connection');
-
-
-const allRoles = [];
-// ^^^^ possibly push all responses to this array above
-
 
 db.connect((err) => {
   err ? console.error(err) : console.log("Successfully started server.");
   init();
 });
 
-// const viewJoin = async () => {
-//   db.query('Select * FROM employees JOIN roles ON employee.role_id = roles.id;', (err, res) => {
-//     (err) ? console.error(err) : console.log('Employee successfully added.') ;
-//     console.table(res);
-//   })
-//   init();
-// }
-
 const init = () => {
   const logoText = logo({ name: "Employee Manager" }).render();
   console.log(logoText);
+  menuNav();
+};
+
+
+const starterPrompt = [
+  {
+  type: "list",
+  message: "What would you like to do?",
+  name: "choices",
+  choices: [
+    "View all employees",
+    "Add employee",
+    "Update employee role",
+    "View all roles",
+    "Add role",
+    "View all departments",
+    "Add department",
+    "Quit"
+  ]
+}
+];
+
+const menuNav = async () => {
   inquirer.prompt(starterPrompt)
   .then((response) => {
     const firstResponse = response.choices;
@@ -57,65 +67,40 @@ const init = () => {
         addDepartment();
         break;
 
-      // case "View Employee Table":
-      //   viewJoin();
-      //   break;
-
       case "Quit":
         quit();
         break;
     }
   });
-};
-
-
-const starterPrompt = [
-  {
-  type: "list",
-  message: "What would you like to do?",
-  name: "choices",
-  choices: [
-    "View all employees",
-    "Add employee",
-    "Update employee role",
-    "View all roles",
-    "Add role",
-    "View all departments",
-    "Add department",
-    "View Employee Table",
-    "Quit"
-  ]
 }
-];
 
-// works
 const viewAllEmployees = async () => {
-  db.query("SELECT * FROM employees;", (err, res) => {
+  db.query('SELECT employees.id AS EmpNo, employees.first_name as First, employees.last_name AS Last, employees.role_id AS RoleID, roles.title AS Role, employees.manager_id AS Manager, roles.salary as Salary FROM employees JOIN roles ON roles.id = employees.role_id;', (err, res) => {
     if (err) throw err;
+    console.log('\n');
     console.table(res);
   })
-  init();
+  await menuNav();
 }
 
-// works
 const viewAllRoles = async () => {
   db.query("SELECT * FROM roles;", (err, res) => {
     if (err) throw err;
+    console.log('\n');
     console.table(res);
   })
-  init();
+  await menuNav();
 }
 
-// works
 const viewAllDepartments = async (departments) => {
   db.query("SELECT * FROM departments;", (err, res) => {
     if (err) throw err;
+    console.log('\n');
     console.table(res);
   })
-  init(departments);
+  await menuNav(departments);
 }
 
-// works
 const addEmployee = () => {
   inquirer
   .prompt([
@@ -142,13 +127,13 @@ const addEmployee = () => {
   ]).then((answers) => {
       db.query(`INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES ('${answers.first_name}', '${answers.last_name}', ${answers.role_id}, ${answers.manager_id});`, (err, res) => {
         (err) ? console.error(err) : console.log('Employee successfully added.') ;
+        console.log('\n');
         console.table(res);
       });
-      init();
     })
+    .then(menuNav());
 }
 
-// works
 const addDepartment = () => {
   inquirer
   .prompt([
@@ -160,13 +145,13 @@ const addDepartment = () => {
   ]).then((answer) => {
     db.query(`INSERT INTO departments(department_name) VALUES('${answer.department_name}');`, (err, res) => {
       (err) ? console.error(err) : console.log('Department added successfully.');
+      console.log('\n');
       console.table(res);
   })
-  init();
 })
+.then(menuNav());
 };
 
-// works
 const addRole = () => {
   inquirer
     .prompt([
@@ -188,14 +173,13 @@ const addRole = () => {
     ]).then((response) => {
       db.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${response.role_title}', ${response.salary}, ${response.department_id});`, (err, res) => {
         (err) ? console.error(err) : console.log('Role added successfully.');
+        console.log('\n');
         console.table(res);
-        // allRoles.push(res);
       })
-      init();
     })
+    .then(menuNav());
 }
 
-// works??
 const updateEmployeeRole = async () => {
   inquirer
   .prompt([
@@ -212,12 +196,12 @@ const updateEmployeeRole = async () => {
   ]).then((response) => {
     db.query(`UPDATE employees SET role_id = ${response.role_id} WHERE id = ${response.id}`, (err, res) => {
     (err) ? console.error(err) : console.log('Employee role updated successfully.');
+    console.log('\n');
     console.table(res);
 })
-init();
-  })
+})
+.then(menuNav());
 };
-
 
 function quit() {
   console.log("Goodbye!");
