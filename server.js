@@ -33,7 +33,7 @@ const starterPrompt = [
 }
 ];
 
-const menuNav = async () => {
+const menuNav = () => {
   inquirer.prompt(starterPrompt)
   .then((response) => {
     const firstResponse = response.choices;
@@ -73,14 +73,14 @@ const menuNav = async () => {
   });
 }
 
-const viewAllEmployees = async () => {
+const viewAllEmployees = () => {
   db.query('SELECT employees.id AS EmpNo, employees.first_name as First, employees.last_name AS Last, employees.role_id AS RoleID, roles.title AS Role, employees.manager_id AS Manager, roles.salary as Salary FROM employees JOIN roles ON roles.id = employees.role_id;', (err, res) => {
     if (err) throw err;
     console.log('\n');
     console.table(res);
   })
   console.log('\n');
-  await menuNav();
+  menuNav();
 }
 
 const viewAllRoles = async () => {
@@ -90,7 +90,7 @@ const viewAllRoles = async () => {
     console.table(res);
   })
   console.log('\n');
-  await menuNav();
+  menuNav();
 }
 
 const viewAllDepartments = async (departments) => {
@@ -100,7 +100,7 @@ const viewAllDepartments = async (departments) => {
     console.table(res);
   })
   console.log('\n');
-  await menuNav(departments);
+  menuNav(departments);
 }
 
 const addEmployee = () => {
@@ -133,8 +133,8 @@ const addEmployee = () => {
         console.table(res);
       });
     console.log('\n');
+    menuNav();
     })
-    .then(menuNav());
 }
 
 const addDepartment = () => {
@@ -152,8 +152,8 @@ const addDepartment = () => {
       console.table(res);
   })
   console.log('\n');
+  menuNav();
 })
-.then(menuNav());
 };
 
 const addRole = () => {
@@ -181,8 +181,8 @@ const addRole = () => {
         console.table(res);
       })
     console.log('\n');
+    menuNav();
     })
-    .then(menuNav());
 }
 
 const updateEmployeeRole = async () => {
@@ -205,8 +205,8 @@ const updateEmployeeRole = async () => {
     console.table(res);
 })
 console.log('\n');
+menuNav();
 })
-.then(menuNav());
 };
 
 function quit() {
